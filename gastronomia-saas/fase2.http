@@ -1,0 +1,60 @@
+@baseUrl = http://localhost:5180
+@tenantId = 20f79353-5444-4ce3-95eb-a889d3e61276
+@email = cliente@example.com
+@codigo = REEMPLAZAR_CODIGO_DEL_BUZON
+@jwt = REEMPLAZAR_TOKEN
+@direccionId = REEMPLAZAR_GUID
+@pedidoId = REEMPLAZAR_GUID
+
+### Solicitar OTP (el código solo llega al buzón local de desarrollo)
+POST {{baseUrl}}/api/auth/request-otp
+Content-Type: application/json
+
+{"tenantId":"{{tenantId}}","email":"{{email}}"}
+
+### Verificar y copiar token.accessToken a la variable jwt
+POST {{baseUrl}}/api/auth/verify-otp
+Content-Type: application/json
+
+{"tenantId":"{{tenantId}}","email":"{{email}}","codigo":"{{codigo}}"}
+
+### Mi cuenta
+GET {{baseUrl}}/api/cuenta
+Authorization: Bearer {{jwt}}
+
+### Editar perfil
+PUT {{baseUrl}}/api/cuenta
+Authorization: Bearer {{jwt}}
+Content-Type: application/json
+
+{"nombre":"Cliente de prueba","telefono":"5491100000000"}
+
+### Agregar dirección ficticia
+POST {{baseUrl}}/api/cuenta/direcciones
+Authorization: Bearer {{jwt}}
+Content-Type: application/json
+
+{"calle":"Calle ficticia","numero":"123","pisoDepto":"2 A","latitud":null,"longitud":null}
+
+### Modificar dirección propia
+PUT {{baseUrl}}/api/cuenta/direcciones/{{direccionId}}
+Authorization: Bearer {{jwt}}
+Content-Type: application/json
+
+{"calle":"Otra calle ficticia","numero":"456"}
+
+### Eliminar dirección propia
+DELETE {{baseUrl}}/api/cuenta/direcciones/{{direccionId}}
+Authorization: Bearer {{jwt}}
+
+### Historial con activos separados
+GET {{baseUrl}}/api/pedidos/mis-pedidos?pagina=1&tamanio=20
+Authorization: Bearer {{jwt}}
+
+### Estado y detalle propios para tracker
+GET {{baseUrl}}/api/pedidos/mis-pedidos/{{pedidoId}}
+Authorization: Bearer {{jwt}}
+
+### Carrito propuesto (no crea otro pedido)
+POST {{baseUrl}}/api/pedidos/reorder/{{pedidoId}}
+Authorization: Bearer {{jwt}}

@@ -1,0 +1,12 @@
+-- Actualización aditiva. No borra pedidos ni reinicializa stock.
+IF COL_LENGTH('dbo.Tenants','TarifaEnvio') IS NULL ALTER TABLE dbo.Tenants ADD TarifaEnvio decimal(18,2) NOT NULL CONSTRAINT DF_Tenants_Envio DEFAULT 1500;
+IF COL_LENGTH('dbo.Products','Categoria') IS NULL ALTER TABLE dbo.Products ADD Categoria nvarchar(40) NOT NULL CONSTRAINT DF_Products_Categoria DEFAULT N'Burgers', Descripcion nvarchar(500) NOT NULL CONSTRAINT DF_Products_Descripcion DEFAULT N'', ImagenKey nvarchar(40) NULL;
+IF COL_LENGTH('dbo.Orders','CheckoutTokenHash') IS NULL ALTER TABLE dbo.Orders ADD CheckoutTokenHash nvarchar(64) NULL, NombreCliente nvarchar(100) NOT NULL CONSTRAINT DF_Orders_Nombre DEFAULT N'Invitado', TipoEntrega int NOT NULL CONSTRAINT DF_Orders_Entrega DEFAULT 0, DireccionEntrega nvarchar(400) NULL, Latitud float NULL, Longitud float NULL, Notas nvarchar(500) NULL, ImporteEnvio decimal(18,2) NOT NULL CONSTRAINT DF_Orders_Envio DEFAULT 0;
+IF COL_LENGTH('dbo.OutboxMessages','Attempts') IS NULL ALTER TABLE dbo.OutboxMessages ADD Attempts int NOT NULL CONSTRAINT DF_Outbox_Attempts DEFAULT 0, NextAttemptUtc datetimeoffset NULL, LockedUntilUtc datetimeoffset NULL, LeaseId uniqueidentifier NULL, LastError nvarchar(1000) NULL, ProviderMessageId nvarchar(160) NULL;
+GO
+IF EXISTS(SELECT 1 FROM sys.check_constraints WHERE name='CK_Orders_Totals') ALTER TABLE dbo.Orders DROP CONSTRAINT CK_Orders_Totals;
+ALTER TABLE dbo.Orders WITH CHECK ADD CONSTRAINT CK_Orders_Totals CHECK (ImporteBruto>=0 AND DescuentoTotal>=0 AND DescuentoTotal<=ImporteBruto AND ImporteEnvio>=0 AND Total=ImporteBruto-DescuentoTotal+ImporteEnvio);
+IF NOT EXISTS(SELECT 1 FROM sys.check_constraints WHERE name='CK_Orders_Delivery') ALTER TABLE dbo.Orders WITH CHECK ADD CONSTRAINT CK_Orders_Delivery CHECK (TipoEntrega IN (0,1) AND (TipoEntrega=0 OR (DireccionEntrega IS NOT NULL AND LEN(LTRIM(RTRIM(DireccionEntrega)))>0)) AND ((Latitud IS NULL AND Longitud IS NULL) OR (Latitud IS NOT NULL AND Longitud IS NOT NULL AND Latitud BETWEEN -90 AND 90 AND Longitud BETWEEN -180 AND 180)));
+IF EXISTS(SELECT 1 FROM sys.check_constraints WHERE name='CK_Payments_Receipt') ALTER TABLE dbo.Payments DROP CONSTRAINT CK_Payments_Receipt;
+ALTER TABLE dbo.Payments WITH CHECK ADD CONSTRAINT CK_Payments_Receipt CHECK ((ComprobanteUrl IS NULL OR (Metodo=1 AND (ComprobanteUrl LIKE 'https://%' OR ComprobanteUrl LIKE '/api/tenants/%/staff/receipts/%'))) AND (Estado<>1 OR ComprobanteUrl IS NOT NULL));
+GO

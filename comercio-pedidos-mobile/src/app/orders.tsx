@@ -1,0 +1,28 @@
+import OnlinePaymentButton from '../components/OnlinePaymentButton';
+import {useLocalSearchParams, useRouter} from 'expo-router';
+import {useState} from 'react';
+import {Linking, Text, View} from 'react-native';
+import ScreenShell from '../components/ScreenShell';
+import ReceiptUploader from '../components/ReceiptUploader';
+import {Button, Notice, ui} from '../components/ui';
+import {useAuth} from '../contexts/AuthContext';
+import {useOrders} from '../contexts/OrdersContext';
+import {useReorder} from '../hooks/useReorder';
+import {moneda} from '../constants/menu';
+import {orderDate, orderLabels, paymentLabels} from '../utils/orderState';
+export default function OrderHistoryScreen() {const auth = useAuth(); return <ScreenShell>{auth.status === 'loading' ? <Text style={ui.text}>Recuperando tus pedidos…</Text> : <OrderHistoryContent key={auth.user?.id ?? 'guest'}/>}</ScreenShell>;}
+function OrderHistoryContent() {
+  const auth = useAuth(); const orders = useOrders(); const repeat = useReorder(); const router = useRouter(); const params = useLocalSearchParams<{tab?: string; orderId?: string}>();
+  const tab = params.tab === 'past' ? 'past' : 'active';
+  const [selection, setSelection] = useState<{routeId?: string; id: string | null}>({routeId: params.orderId, id: params.orderId ?? null}), [error, setError] = useState('');
+  const selected = selection.routeId === params.orderId ? selection.id : params.orderId ?? null;
+  const setSelected = (id: string | null) => setSelection({routeId: params.orderId, id});
+  const setTab = (value: 'active' | 'past') => router.setParams({tab: value, orderId: undefined});
+  const entries = tab === 'active' ? orders.active : orders.history;
+  async function reorder(id: string) {setError(''); try {await repeat.reorder(id);} catch (error) {setError(error instanceof Error ? error.message : 'No se pudo recuperar la compra.');}}
+  async function whatsapp(id: string) {setError(''); const journal = orders.localJournal(id); if (!journal?.result) return; try {await Linking.openURL(journal.result.whatsAppUrl);} catch {setError('No se pudo abrir WhatsApp. Tu pedido sigue guardado.');}}
+  return <View style={ui.page}><View style={ui.row}><View style={{gap: 8}}><Text style={ui.small}>MIS PEDIDOS</Text><Text style={ui.title}>Cada antojo cuenta.</Text></View><Button label="Actualizar pedidos" secondary busy={orders.refreshing} onPress={() => {void orders.refresh();}}/></View>{!auth.user && <View style={ui.card}><Text style={ui.muted}>Podés seguir las compras de este dispositivo. Ingresá con el email del pedido para reunir tu historial y volver a pedir.</Text><Button label="Ingresar para ver todo mi historial" secondary onPress={() => router.navigate({pathname: '/login', params: {returnTo: '/orders'}})}/></View>}<View style={ui.row}><Button label={`Pedidos activos (${orders.totalActive})`} secondary={tab !== 'active'} onPress={() => setTab('active')}/><Button label={`Pedidos anteriores (${orders.totalHistory})`} secondary={tab !== 'past'} onPress={() => setTab('past')}/></View><Notice message={error || orders.error} error/>{!orders.ready || orders.refreshing && !entries.length ? <Text style={ui.muted}>Actualizando pedidos…</Text> : !entries.length ? <View style={ui.empty}><Text style={ui.subtitle}>{tab === 'active' ? 'Todo tranquilo por acá.' : 'Tu historial empieza con una burger.'}</Text><Text style={ui.muted}>{tab === 'active' ? 'Cuando guardes un pedido, lo vas a seguir desde acá.' : 'Los pedidos entregados o cancelados aparecerán en esta sección.'}</Text><Button label="Ver el menú" onPress={() => router.navigate('/')}/></View> : entries.map(order => {
+    const expanded = selected === order.id; const local = orders.localJournal(order.id);
+    return <View key={order.id} style={ui.card}><View style={ui.row}><Text style={ui.subtitle}>{order.shortCode}</Text><Text style={ui.pill}>{orderLabels[order.estadoPedido]}</Text></View><Text style={ui.muted}>{orderDate(order.fecha)}</Text><Text style={ui.text}>{order.items.map(item => `${item.cantidad} × ${item.nombre}`).join(' · ')}</Text><View style={ui.row}><Text style={ui.total}>{moneda(order.total)}</Text><Text style={ui.muted}>{paymentLabels[order.estadoPago]}</Text></View><Button label={expanded ? `Ocultar ${order.shortCode}` : `Ver ${order.shortCode}`} secondary onPress={() => setSelected(expanded ? null : order.id)}/>{expanded && <View style={ui.page}><Text style={ui.text}>{order.tipoEntrega === 'Delivery' ? `Delivery · ${order.direccionEntrega ?? ''}` : 'Retiro por el local'}</Text>{order.notas && <Text style={ui.muted}>Notas: {order.notas}</Text>}{order.items.map(item => <View style={ui.row} key={item.productId}><Text style={[ui.text, {flex: 1}]}>{item.cantidad} × {item.nombre}</Text><Text style={ui.text}>{moneda(item.subtotal)}</Text></View>)}<OnlinePaymentButton order={order}/><ReceiptUploader journal={local} order={order}/>{local && <><Button label={`Abrir WhatsApp ${order.shortCode}`} onPress={() => {void whatsapp(order.id);}}/></>}</View>}{tab === 'past' && <Button label={`Volver a pedir ${order.shortCode}`} busy={repeat.busyId === order.id} disabled={!!repeat.busyId} onPress={() => {void reorder(order.id);}}/>}</View>;
+  })}{tab === 'past' && auth.user && orders.totalHistory > 10 && <View style={ui.row}><Button label="Página anterior" secondary disabled={orders.page <= 1 || orders.refreshing} onPress={() => orders.setPage(orders.page - 1)}/><Text style={ui.text}>{orders.page} / {Math.max(1, Math.ceil(orders.totalHistory / 10))}</Text><Button label="Página siguiente" secondary disabled={orders.page >= Math.ceil(orders.totalHistory / 10) || orders.refreshing} onPress={() => orders.setPage(orders.page + 1)}/></View>}</View>;
+}

@@ -1,0 +1,15 @@
+import {ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View, type TextInputProps, type ViewStyle} from 'react-native';
+export const colors = {background: '#101110', surface: '#1d1f1c', line: '#36392f', text: '#f6f2eb', muted: '#adb3a3', orange: '#ff8a3d', green: '#c4e39b'};
+export function Button({label, onPress, secondary = false, disabled = false, busy = false, style}: {label: string; onPress(): void; secondary?: boolean; disabled?: boolean; busy?: boolean; style?: ViewStyle}) {
+  return <Pressable accessibilityRole="button" disabled={disabled || busy} onPress={onPress} style={[ui.button, secondary && ui.secondary, (disabled || busy) && ui.disabled, style]}>{busy && <ActivityIndicator color={secondary ? colors.text : colors.background}/>}<Text style={[ui.buttonText, secondary && ui.secondaryText]}>{label}</Text></Pressable>;
+}
+export function Field({label, ...props}: TextInputProps & {label: string}) {
+  return <View style={ui.field}><Text style={ui.label}>{label}</Text><TextInput accessibilityLabel={label} placeholderTextColor="#858e7c" {...props} style={[ui.input, props.style]}/></View>;
+}
+export function Notice({message, error = false}: {message?: string | null; error?: boolean}) {
+  if (!message) return null;
+  return <Text accessibilityLiveRegion="polite" style={[ui.notice, error && ui.error]}>{message}</Text>;
+}
+export const ui = StyleSheet.create({
+  page: {gap: 20}, title: {fontSize: 30, fontWeight: '900', color: colors.text, letterSpacing: -1}, subtitle: {fontSize: 19, fontWeight: '800', color: colors.text}, text: {fontSize: 14, color: colors.text, lineHeight: 22}, muted: {fontSize: 13, color: colors.muted, lineHeight: 21}, small: {fontSize: 11, fontWeight: '800', color: colors.orange, letterSpacing: 1.5}, card: {backgroundColor: colors.surface, padding: 21, borderWidth: 1, borderColor: colors.line, borderRadius: 20, gap: 15}, row: {flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap'}, button: {backgroundColor: colors.orange, paddingVertical: 16, paddingHorizontal: 20, borderRadius: 14, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8, minHeight: 50}, secondary: {backgroundColor: colors.line}, disabled: {opacity: 0.5}, buttonText: {color: colors.background, fontSize: 14, fontWeight: '800'}, secondaryText: {color: colors.text}, field: {gap: 8}, label: {fontSize: 13, fontWeight: '700', color: colors.text}, input: {borderWidth: 1, borderColor: colors.line, borderRadius: 12, backgroundColor: colors.surface, color: colors.text, padding: 15, minHeight: 50, fontSize: 16}, notice: {padding: 16, backgroundColor: '#2b3525', color: '#e0ebd1', borderRadius: 13, lineHeight: 21, fontSize: 13}, error: {backgroundColor: '#462a23', color: '#ffd0b8'}, pill: {backgroundColor: '#30392b', color: colors.green, paddingVertical: 6, paddingHorizontal: 10, borderRadius: 10, fontSize: 11, fontWeight: '800'}, empty: {paddingVertical: 30, gap: 10}, link: {color: colors.orange, fontWeight: '700', fontSize: 14}, total: {fontSize: 25, fontWeight: '900', color: colors.text}, separator: {height: 1, backgroundColor: colors.line},
+});

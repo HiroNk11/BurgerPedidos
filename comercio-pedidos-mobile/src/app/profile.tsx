@@ -1,0 +1,22 @@
+import {useState} from 'react';
+import {useRouter} from 'expo-router';
+import {Text, View} from 'react-native';
+import ScreenShell from '../components/ScreenShell';
+import AddressEditor from '../components/AddressEditor';
+import {Button, Field, Notice, ui} from '../components/ui';
+import {useAuth} from '../contexts/AuthContext';
+import {useAccount} from '../hooks/useAccount';
+import type {Address, Customer} from '../services/customerTypes';
+import {confirmAction} from '../utils/confirmAction';
+export default function ProfileScreen() {
+  const auth = useAuth(); const router = useRouter(); const [error, setError] = useState('');
+  return <ScreenShell>{auth.status === 'loading' ? <Text style={ui.text}>Recuperando tu cuenta…</Text> : auth.user ? <ProfileForm key={auth.user.id} customer={auth.user}/> : <View style={ui.page}><Text style={ui.small}>MI CUENTA</Text><Text style={ui.title}>Tus datos, a mano.</Text><Text style={ui.muted}>Ingresá con tu email para guardar tus direcciones y consultar tus pedidos desde cualquier dispositivo.</Text><Notice message={error || auth.notice} error/>{auth.status === 'unavailable' ? <Button label="Recuperar mi sesión" onPress={() => {void auth.refreshProfile().catch(error => setError(error.message));}}/> : <Button label="Ingresar con un código" onPress={() => router.navigate('/login')}/>}</View>}</ScreenShell>;
+}
+function ProfileForm({customer}: {customer: Customer}) {
+  const auth = useAuth(); const account = useAccount(); const router = useRouter();
+  const [nombre, setNombre] = useState(customer.nombre), [phone, setPhone] = useState(customer.telefono), [editor, setEditor] = useState<{address?: Address} | null>(null), [message, setMessage] = useState(''), [error, setError] = useState('');
+  async function saveProfile() {setError(''); setMessage(''); try {await account.saveProfile(nombre, phone); setMessage('Tus datos quedaron guardados.');} catch (error) {setError(error instanceof Error ? error.message : 'No se pudo guardar.');}}
+  async function remove(address: Address) {if (!await confirmAction('Eliminar dirección', `${address.calle} ${address.numero}. Los pedidos anteriores conservarán su dirección.`, true)) return; setError(''); try {await account.deleteAddress(address.id); setMessage('Dirección eliminada.');} catch (error) {setError(error instanceof Error ? error.message : 'No se pudo eliminar.');}}
+  async function logout() {setError(''); try {await auth.logout(); router.replace('/');} catch (error) {setError(error instanceof Error ? error.message : 'No se pudo cerrar la sesión.');}}
+  return <View style={ui.page}><Text style={ui.small}>MI CUENTA</Text><Text style={ui.title}>{customer.nombre ? `Hola, ${customer.nombre.split(' ')[0]}.` : 'Hacete del club.'}</Text><Text style={ui.muted}>{customer.email} · Email verificado</Text><View style={ui.card}><Text style={ui.subtitle}>Tus datos</Text><Field label="Nombre y apellido" value={nombre} onChangeText={setNombre} maxLength={100} editable={!account.busy}/><Field label="Teléfono de contacto" value={phone} onChangeText={setPhone} keyboardType="phone-pad" maxLength={25} editable={!account.busy}/><Button label="Guardar mis datos" busy={account.busy} onPress={() => {void saveProfile();}}/></View><View style={ui.row}><Text style={ui.subtitle}>Mis direcciones</Text><Button label="Agregar dirección" secondary disabled={account.busy || customer.direcciones.length >= 10} onPress={() => setEditor({})}/></View>{!customer.direcciones.length && <Text style={ui.muted}>Agregá una dirección para tenerla lista en tu próxima compra.</Text>}{customer.direcciones.map(address => <View style={ui.card} key={address.id}><Text style={ui.subtitle}>{address.calle} {address.numero}</Text>{address.pisoDepto && <Text style={ui.text}>{address.pisoDepto}</Text>}{address.latitud !== null && <Text style={ui.muted}>Ubicación guardada</Text>}<View style={ui.row}><Button label={`Editar ${address.calle}`} secondary disabled={account.busy} onPress={() => setEditor({address})}/><Button label={`Eliminar ${address.calle}`} secondary disabled={account.busy} onPress={() => {void remove(address);}}/></View></View>)}<Notice message={message}/><Notice message={error} error/><Button label="Cerrar sesión" secondary disabled={account.busy} onPress={() => {void logout();}}/>{editor && <AddressEditor key={editor.address?.id ?? 'new'} address={editor.address} busy={account.busy} onSave={async (value, id) => {await account.saveAddress(value, id); setMessage('Dirección guardada.');}} onClose={() => setEditor(null)}/>}</View>;
+}

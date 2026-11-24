@@ -1,0 +1,86 @@
+[
+  {
+    "nombre": "La Clásica",
+    "descripcion": "Carne smash, cheddar, lechuga, tomate y salsa de la casa.",
+    "precio": 8500,
+    "categoria": "Burgers",
+    "imagenKey": "classic"
+  },
+  {
+    "nombre": "Doble Bacon",
+    "descripcion": "Doble carne, doble cheddar, bacon crocante y barbacoa.",
+    "precio": 11500,
+    "categoria": "Burgers",
+    "imagenKey": "bacon"
+  },
+  {
+    "nombre": "Crispy Onion",
+    "descripcion": "Carne smash, cheddar, cebolla crispy y alioli.",
+    "precio": 9800,
+    "categoria": "Burgers",
+    "imagenKey": "onion"
+  },
+  {
+    "nombre": "Veggie Club",
+    "descripcion": "Medallón de garbanzos, rúcula, tomate y mayonesa vegetal.",
+    "precio": 8900,
+    "categoria": "Burgers",
+    "imagenKey": null
+  },
+  {
+    "nombre": "Papas clásicas",
+    "descripcion": "Doradas, crocantes y con el punto justo de sal.",
+    "precio": 3500,
+    "categoria": "Papas",
+    "imagenKey": "fries-classic"
+  },
+  {
+    "nombre": "Papas cheddar",
+    "descripcion": "Papas con cheddar fundido y bacon.",
+    "precio": 5200,
+    "categoria": "Papas",
+    "imagenKey": "fries-cheddar"
+  },
+  {
+    "nombre": "Coca-Cola · lata 354 ml",
+    "descripcion": "Sabor original. Bien fría para acompañar tu burger.",
+    "precio": 2500,
+    "categoria": "Bebidas",
+    "imagenKey": "coca-can"
+  },
+  {
+    "nombre": "Coca-Cola Sin Azúcar · lata 354 ml",
+    "descripcion": "Todo el sabor, sin azúcar.",
+    "precio": 2500,
+    "categoria": "Bebidas",
+    "imagenKey": "coca-zero-can"
+  },
+  {
+    "nombre": "Sprite · lata 354 ml",
+    "descripcion": "Lima-limón, fresca y burbujeante.",
+    "precio": 2500,
+    "categoria": "Bebidas",
+    "imagenKey": "sprite-can"
+  },
+  {
+    "nombre": "Fanta Naranja · lata 354 ml",
+    "descripcion": "Un toque de naranja para tu pedido.",
+    "precio": 2500,
+    "categoria": "Bebidas",
+    "imagenKey": "fanta-can"
+  },
+  {
+    "nombre": "Coca-Cola · botella 1,25 L",
+    "descripcion": "Sabor original, tamaño para compartir.",
+    "precio": 4500,
+    "categoria": "Bebidas",
+    "imagenKey": "coca-bottle"
+  },
+  {
+    "nombre": "Sprite · botella 1,25 L",
+    "descripcion": "Lima-limón en botella, ideal para compartir.",
+    "precio": 4500,
+    "categoria": "Bebidas",
+    "imagenKey": "sprite-bottle"
+  }
+]

@@ -1,0 +1,2 @@
+<Project Sdk="Microsoft.NET.Sdk"><ItemGroup><ProjectReference Include="../Gastronomia.Application/Gastronomia.Application.csproj" /><PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.13" /><PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.21" /></ItemGroup></Project>
+

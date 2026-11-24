@@ -1,0 +1,17 @@
+bin/
+obj/
+.vs/
+.env
+*.user
+*.log
+
+appsettings.Development.local.json
+App_Data/
+node_modules/
+admin/dist/
+src/Gastronomia.Api/wwwroot/admin/
+
+.env.*
+!.env.template
+*.pfx
+*.pem

@@ -1,0 +1,14 @@
+import PaymentFlowNotice from './PaymentFlowNotice';
+import {Link, usePathname} from 'expo-router';
+import {Pressable, ScrollView, StyleSheet, Text, View, type ViewStyle} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import type {PropsWithChildren} from 'react';
+import {useAuth} from '../contexts/AuthContext';
+import {useCart} from '../contexts/CartContext';
+import ActiveOrderTracker from './ActiveOrderTracker';
+import {colors} from './ui';
+export default function ScreenShell({children, scroll = true, contentStyle}: PropsWithChildren<{scroll?: boolean; contentStyle?: ViewStyle}>) {
+  const path = usePathname(); const auth = useAuth(); const cart = useCart();
+  return <SafeAreaView style={s.safe}><View style={s.container}><View style={s.header}><Link href="/" asChild><Pressable accessibilityRole="link"><Text style={s.brand}>BURGER<Text style={{color: colors.orange}}> CLUB.</Text></Text><Text style={s.caption}>Smash burgers · Hechas al momento</Text></Pressable></Link><Text style={s.avatar}>BC.</Text></View><View style={s.nav}>{[{href: '/' as const, label: 'Menú'}, {href: '/orders' as const, label: 'Mis pedidos'}, {href: '/profile' as const, label: auth.user ? 'Mi cuenta' : 'Ingresar'}, {href: '/checkout' as const, label: cart.locked ? 'Solicitud pendiente' : `Carrito (${cart.cantidad})`}].map(item => <Link key={item.href} href={item.href} asChild><Pressable accessibilityRole="link" accessibilityState={{selected: path === item.href}} style={StyleSheet.flatten([s.navItem, path === item.href && s.selected])}><Text style={[s.navText, path === item.href && {color: colors.background}]}>{item.label}</Text></Pressable></Link>)}</View><ActiveOrderTracker/><PaymentFlowNotice/>{scroll ? <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={[s.content, contentStyle]}>{children}</ScrollView> : children}</View></SafeAreaView>;
+}
+const s = StyleSheet.create({safe: {flex: 1, backgroundColor: colors.background}, container: {flex: 1, maxWidth: 760, width: '100%', alignSelf: 'center'}, header: {padding: 20, paddingBottom: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 10}, brand: {fontSize: 24, fontWeight: '900', color: colors.text, letterSpacing: -1}, caption: {fontSize: 10, color: colors.muted, marginTop: 5}, avatar: {backgroundColor: colors.orange, color: colors.background, padding: 14, borderRadius: 15, overflow: 'hidden', fontWeight: '900'}, nav: {paddingHorizontal: 20, paddingBottom: 16, flexDirection: 'row', gap: 7, flexWrap: 'wrap'}, navItem: {paddingVertical: 11, paddingHorizontal: 13, borderRadius: 14, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line}, selected: {backgroundColor: colors.orange, borderColor: colors.orange}, navText: {fontWeight: '700', fontSize: 11, color: colors.text}, content: {padding: 20, paddingTop: 8, paddingBottom: 45, gap: 20}});

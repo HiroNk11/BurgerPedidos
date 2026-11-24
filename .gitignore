@@ -1,0 +1,26 @@
+# Dependencias y compilados
+node_modules/
+bin/
+obj/
+dist/
+dist-android/
+web-build/
+.expo/
+.vs/
+coverage/
+# Secretos y datos locales
+.env
+.env.*
+!.env.example
+!.env.template
+appsettings.*.local.json
+App_Data/
+*.log
+*.user
+*.pfx
+*.pem
+*.key
+*.p12
+*.jks
+# Panel generado
+gastronomia-saas/src/Gastronomia.Api/wwwroot/admin/
