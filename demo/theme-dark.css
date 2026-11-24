@@ -1,0 +1,105 @@
+/* Dark presentation theme shared by the storefront, business panel and dialogs. */
+:root {
+  color-scheme: dark;
+  --paper: #111510;
+  --ink: #f4f3e9;
+  --muted: #b3bbaa;
+  --orange: #f78b4b;
+  --line: #343d2e;
+  --green: #b8d89e;
+  --white: #1b2118;
+  --surface: #1b2118;
+  --raised: #242c20;
+  --soft-green: #293c23;
+}
+body { background: var(--paper); color: var(--ink); }
+.demo-strip { background: #202c1d; color: #c4d7b4; }
+.live-dot { background: #a4ce81; }
+.header { border-color: var(--line); }
+.view-switch { background: #1d241a; border-color: var(--line); }
+.view-switch button { color: #b7bead; }
+.view-switch .selected { background: #35432a; color: #f4f3e9; box-shadow: 0 2px 7px #0004; }
+.bag-button > span { background: var(--orange); color: #151b11; }
+.walkthrough { background: #1b2418; border-color: #34412d; }
+.step-number { border-color: #546646; color: #c4d9b2; }
+.walkthrough small { color: #b1bca5; }
+.chip { background: #1b2118; border-color: #3b4534; color: #c0c9b5; }
+.chip.active { background: #344e29; border-color: #698454; color: #f5f6ec; }
+.favorite-filter { background: transparent; color: #b3bbaa; }
+.favorite-filter.active { background: #35271e; color: #ffb184; border-color: #805336; }
+.favorite-filter.active svg { fill: #a85e38; }
+.product-card, .cart, .order-card, .metric, .mail-card,
+.history-list > article, .payment-preview, .whatsapp-preview, .receipt-example,
+.payment-options label { background: var(--surface); border-color: var(--line); }
+.product-photo { background: #242a1f; }
+/* Beverage photos have their own neutral backdrop; never invert product imagery. */
+.product-photo.drink { background: #efeee9; }
+.product-content .eyebrow { color: #b7c2a9; }
+.product-tag { background: #e4d4ad; color: #322b1c; }
+.heart-button { background: #182016ed; color: #d6deca; border: 1px solid #71836566; }
+.heart-button.on { background: #402a1f; color: #ffb58a; border-color: #9a6949; }
+.heart-button.on svg { fill: #c6794c; }
+.quantity-button { background: #303b28; color: #e1e8d7; }
+.quantity-button.add { background: #3c5330; color: #e5f2d6; }
+.quantity-button:hover:not(:disabled) { background: #536c40; }
+.cart-line { border-color: var(--line); }
+.mini-quantity button { background: #35442a; color: #e6efda; }
+.cart-tip { background: #26311f; }
+.cart-tip p { color: #b8c4ac; }
+.cart-tip strong, .cart-tip > b { color: #d8e7c7; }
+.empty-cart > span { background: #252e20; border-color: #435236; color: #b1c799; }
+.delivery button { background: #20271c; border-color: #435137; color: #c7d1bc; }
+.delivery .selected { background: #34472a; border-color: #8da96d; color: #edf4e0; }
+.coupon-form > div { border-color: #4d5e3f; }
+.coupon-form input { background: #151b12; color: var(--ink); }
+.coupon-form input::placeholder { color: #aab59d; }
+.coupon-form button { background: #35482a; color: #e0efcc; }
+.totals .discount > span { color: #bfdea6 !important; }
+.promo-banner { background: #24351e; border: 1px solid #465c36; }
+.promo-banner p { color: #b7c7a7; }
+.coupon-ticket { background: #182115; border-color: #8ba271; color: #d9edbf; }
+.primary { background: var(--orange); color: #191c12; }
+.primary:hover { background: #ffac78; }
+.outline, .small-button { background: #26311f; border-color: #4a5d3c; color: #deebce; }
+.outline:hover, .small-button:hover { background: #34472a; }
+.safe-note { color: #b5bfaa; }
+.tracker { background: #25331f; border-color: #4a6037; }
+.tracker-icon { background: #3b512c; color: #d7edbd; }
+.tracker-info > small { color: #b4cba0; }
+.tracker-info > span { color: #bfceb2; }
+.admin-nav > button.selected { background: #334a28; color: #edf5e3; }
+.admin-note { background: #25321f; }
+.admin-note p { color: #bdc9b0; }
+.kanban-column { background: #191f16; border-color: #35412c; }
+.column-empty { border-color: #4b583e; color: #b7c0ab; }
+.orange { background: #44301f; color: #ffc18c; }
+.green { background: #2a4221; color: #c5e4ad; }
+.blue { background: #223b43; color: #b0d9e9; }
+.gray { background: #30362a; color: #c0c7b5; }
+.amber { background: #48391e; color: #f3d691; }
+.order-adjustment { color: #bad8a2; }
+.cancel-button { color: #f0b195; }
+.order-top > small, .order-customer span, .order-total > span,
+.address-note, .admin-footnote { color: #b3bdaa; }
+.mail-icon { background: #344a28; color: #d4edba; }
+.empty { border-color: #4c5c3d; }
+dialog { background: #191f16; color: var(--ink); border-color: #536343; box-shadow: 0 25px 110px #000b; }
+dialog::backdrop { background: #060a06c7; }
+.modal-close { background: #35422b; color: #e1e9d6; }
+.demo-customer, .profile-card { background: #283820; border-color: #4d613b; }
+.demo-customer small { color: #bdcaaf; }
+.payment-options input { accent-color: #a7cd80; }
+.success-mark { background: #3b542c; color: #e1f5c9; }
+.order-code-large { background: #2b3d21; border-color: #7e9a61; color: #d6edb9; }
+.whatsapp-preview > b { color: #c9e5af; }
+.whatsapp-preview small { color: #b9c8a9; }
+.receipt-example { border-color: #819d65; }
+.receipt-example > b { color: #c9e5ae; }
+.modal-status { background: #34472a; color: #e0efce; }
+.footer { color: #b1bba5; }
+.mobile-cart { background: #11180fef; border-color: #3c4a30; }
+#toast { background: #d5e5c1; color: #192413; border: 1px solid #8daa70; box-shadow: 0 8px 35px #0008; }
+@media (max-width: 700px) {
+  .favorite-filter { background: #1b2118; border-color: #3b4534; }
+  .favorite-filter.active { background: #35271e; border-color: #805336; }
+}
