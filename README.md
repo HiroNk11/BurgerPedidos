@@ -1,8 +1,14 @@
 # BurgerPedidos
 
+**[Probar demo pública](https://burgerpedidos-demo.nicogiron09.chatgpt.site)** · [Guía de demostración](demo/README.md)
+
+Tienda y panel interactivos con pedidos y pagos ficticios; sin registro ni cobros reales.
+
 Plataforma gastronómica con tienda web/móvil en React Native y Expo, API en ASP.NET Core .NET 10, Entity Framework Core y SQL Server, y panel del negocio en React.
 
 ## Estructura
+
+- `demo/`: demostración comercial estática, aislada del backend y lista para compartir.
 
 - `comercio-pedidos-mobile/`: storefront Expo y web, OTP, perfil, direcciones, historial, reorder, favoritos, promociones y seguimiento de pedidos.
 - `gastronomia-saas/`: API, dominio, infraestructura, esquema SQL, pruebas, panel y Docker.
