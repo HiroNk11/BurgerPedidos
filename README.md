@@ -8,14 +8,12 @@ Plataforma gastronómica con tienda web/móvil en React Native y Expo, API en AS
 
 ## Capturas de la aplicación
 
-<!--
-Capturas pendientes: usar únicamente datos ficticios.
-Agregar los archivos indicados y retirar este comentario para mostrar las imágenes.
+Capturas de la demo pública con datos ficticios; sin operaciones reales.
 
 ![Panel del local con pedidos de ejemplo y sus estados](docs/screenshots/dashboard.png)
 
 ![Carrito y checkout con cupón, entrega y pago simulado](docs/screenshots/flujo-principal.png)
--->
+
 
 ## Estructura
 
